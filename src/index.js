@@ -57,25 +57,71 @@ var notesStorage = (() => {
   return this
 })()
 
-var noteBuilder = (() => {
-  this.aggregate = (commits) => {
+const stylingTags = {
+  italic: { md: '*', txt: '' },
+  bold:   { md: '**', txt: '' }
+}
+
+var notesBuilder = (() => {
+
+  this.aggregate = (commits, format) => {
     let output = ''
+    let formatOffsetsByPosition = {}
 
     commits.forEach((commit) => {
       switch(commit[0]) {
         case commandTypes.insertAtPosition:
         case commandTypes.insert:
-          let position = commit[0] === commandTypes.insertAtPosition ? commit[2] : output.length
+          let position = commit[0] === commandTypes.insertAtPosition ? parseInt(commit[2], 10) : output.length
           let text     = commit[0] === commandTypes.insertAtPosition ? commit[3] : commit[2]
-          output = output.substring(0, position) + text + output.substring(position, output.length)
+          
+          output = this.insertAtPosition(
+            output,
+            text,
+            this.getPositionAwareOfFormat(position, formatOffsetsByPosition)
+          )
           break
-        case commandTypes.format:
 
+        case commandTypes.format:
+          let positionStart = parseInt(commit[2], 10)
+          let positionEnd   = parseInt(commit[3], 10)
+          let style         = commit[4]
+          let stylingTag    = stylingTags[style][format]
+          let positions     = [positionStart, positionEnd]
+          
+          positions.forEach((position) => {
+            output = this.insertAtPosition(
+              output,
+              stylingTag,
+              this.getPositionAwareOfFormat(position, formatOffsetsByPosition)
+            )
+            if (!formatOffsetsByPosition[position]) {
+              formatOffsetsByPosition[position] = stylingTag.length
+            } else {
+              formatOffsetsByPosition[position] += stylingTag.length
+            }
+          })
           break
       }
     })
 
     return output
+  }
+
+  this.insertAtPosition = (content, text, position) => {
+    return content.substring(0, position) + text + content.substring(position, content.length)
+  }
+
+  this.getPositionAwareOfFormat = (position, positionOffsets) => {
+    let positionsWithFormat = Object.keys(positionOffsets)
+    positionsWithFormat.sort()
+
+    let offset = 0
+    for (var i = 0; i < positionsWithFormat.length; i++) {
+      if (positionsWithFormat[i] > position) break
+      offset += positionOffsets[positionsWithFormat[i]]
+    }
+    return position + offset
   }
   return this
 })()
@@ -106,9 +152,10 @@ const server = net.createServer((socket) => {
           }
           break
         case commandTypes.get:
-          let note = notesStorage.get(args[1])
+          let note   = notesStorage.get(args[1])
+          let format = args[2]
           if (note) {
-            response = noteBuilder.aggregate(note)
+            response = notesBuilder.aggregate(note, format)
           }
           break
       }      
