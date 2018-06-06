@@ -57,6 +57,29 @@ var notesStorage = (() => {
   return this
 })()
 
+var noteBuilder = (() => {
+  this.aggregate = (commits) => {
+    let output = ''
+
+    commits.forEach((commit) => {
+      switch(commit[0]) {
+        case commandTypes.insertAtPosition:
+        case commandTypes.insert:
+          let position = commit[0] === commandTypes.insertAtPosition ? commit[2] : output.length
+          let text     = commit[0] === commandTypes.insertAtPosition ? commit[3] : commit[2]
+          output = output.substring(0, position) + text + output.substring(position, output.length)
+          break
+        case commandTypes.format:
+
+          break
+      }
+    })
+
+    return output
+  }
+  return this
+})()
+
 const server = net.createServer((socket) => {
   socket.on('error', (err) => console.log(err))
   socket.on('data', (data) => {
@@ -85,7 +108,7 @@ const server = net.createServer((socket) => {
         case commandTypes.get:
           let note = notesStorage.get(args[1])
           if (note) {
-            response = note.length ? note : ''
+            response = noteBuilder.aggregate(note)
           }
           break
       }      
