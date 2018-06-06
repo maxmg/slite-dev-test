@@ -18,7 +18,7 @@ const commandsTemplates = {
   [commandTypes.insert]          : /^insert:(\w+):(.+)\n$/s,
   [commandTypes.delete]          : /^delete:(\w+)\n$/s,
   [commandTypes.get]             : /^get:(\w+):(\w+)\n$/s,
-  [commandTypes.format]          : /^format:(\w+):(\d):(\d):(\w+)\n$/s
+  [commandTypes.format]          : /^format:(\w+):(\d+):(\d+):(\w+)\n$/s
 }
 
 function parseCommand(command) {
