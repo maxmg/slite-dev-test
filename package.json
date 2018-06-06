@@ -1,0 +1,23 @@
+{
+  "name": "@slite/slite-dev-test",
+  "version": "1.0.0",
+  "description": "Slite test for new developers",
+  "main": "src/index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "jest ./test.js"
+  },
+  "keywords": [
+    "Slite",
+    "dev",
+    "test"
+  ],
+  "author": "Slite Team",
+  "license": "ISC",
+  "dependencies": {
+    "jest": "^23.1.0"
+  }
+}
