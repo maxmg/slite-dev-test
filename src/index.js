@@ -37,7 +37,6 @@ function parseCommand(command) {
 var notesStorage = (() => {
   this.notes = {}
   this.create = (noteId) => {
-    if (this.notes[noteId]) return false
     this.notes[noteId] = []
     return true
   }
