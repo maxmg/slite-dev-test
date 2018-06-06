@@ -64,15 +64,16 @@ const server = net.createServer((socket) => {
     let args = parseCommand(data.toString('utf-8'))
     
     if (args) {
+      let noteId = args[1]
       switch(args[0]) {
         case commandTypes.create:
-          notesStorage.create(args[1])
+          notesStorage.create(noteId)
           response = 200
           break
         case commandTypes.insertAtPosition:
         case commandTypes.insert:
         case commandTypes.format:
-          if (notesStorage.commit(args)) {
+          if (notesStorage.commit(noteId, args)) {
             response = 200
           }
           break
