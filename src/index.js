@@ -34,28 +34,57 @@ function parseCommand(command) {
   return args
 }
 
+var notesStorage = (() => {
+  this.notes = {}
+  this.create = (noteId) => {
+    if (this.notes[noteId]) return false
+    this.notes[noteId] = []
+    return true
+  }
+  this.get = (noteId) => {
+    if (!this.notes[noteId]) return false
+    return this.notes[noteId]
+  }
+  this.commit = (noteId, action) => {
+    if (!this.notes[noteId]) return false
+    this.notes[noteId].push(action)
+    return true
+  }
+  this.delete = (noteId) => {
+    if (!this.notes[noteId]) return false
+    delete this.notes[noteId]
+    return true
+  }
+  return this
+})()
 
 const server = net.createServer((socket) => {
   socket.on('error', (err) => console.log(err))
   socket.on('data', (data) => {
     let response = 404
     let args = parseCommand(data.toString('utf-8'))
-
+    
     if (args) {
       switch(args[0]) {
         case commandTypes.create:
+          notesStorage.create(args[1])
           response = 200
           break
         case commandTypes.insertAtPosition:
         case commandTypes.insert:
         case commandTypes.format:
-          response = 200
+          if (notesStorage.commit(args)) {
+            response = 200
+          }
           break
         case commandTypes.delete:
-          response = 200
+          notesStorage.delete(args[1])
           break
         case commandTypes.get:
-          response = 200
+          let note = notesStorage.get(args[1])
+          if (note) {
+            response = note.length ? note : ''
+          }
           break
       }      
     }
