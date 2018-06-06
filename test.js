@@ -107,12 +107,13 @@ describe('Slite 1986 Test', function () {
       await runCommand(`insert:${docId}:Hello`)
       await runCommand(`format:${docId}:0:5:italic`)
       await runCommand(`insert:${docId}:5: World!`)
+      await runCommand(`insert:${docId}:\n`)
 
       const respmd = await runCommand(`get:${docId}:md`)
       expect(respmd).toEqual('*Hello* World!\n\r\n')
 
       const resptxt = await runCommand(`get:${docId}:txt`)
-      expect(resptxt).toEqual('Hello World!\r\n')
+      expect(resptxt).toEqual('Hello World!\n\r\n')
     })
   })
 
