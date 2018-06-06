@@ -78,7 +78,9 @@ const server = net.createServer((socket) => {
           }
           break
         case commandTypes.delete:
-          notesStorage.delete(args[1])
+          if (notesStorage.delete(args[1])) {
+            response = 200
+          }
           break
         case commandTypes.get:
           let note = notesStorage.get(args[1])
