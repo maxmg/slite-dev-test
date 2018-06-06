@@ -13,12 +13,12 @@ const commandTypes = {
 }
 
 const commandsTemplates = {
-  [commandTypes.create]          : /^create:(\w+)/,
-  [commandTypes.insertAtPosition]: /^insert:(\w+):(\d+):(\w+)/,  // TODO: merge with 'insert'
-  [commandTypes.insert]          : /^insert:(\w+):(\w+)/,
-  [commandTypes.delete]          : /^delete:(\w+)/,
-  [commandTypes.get]             : /^get:(\w+):(\w+)/,
-  [commandTypes.format]          : /^format:(\w+):(\d):(\d):(\w+)/
+  [commandTypes.create]          : /^create:(\w+)\n$/s,
+  [commandTypes.insertAtPosition]: /^insert:(\w+):(\d+):(.+)\n$/s,  // TODO: merge with 'insert'
+  [commandTypes.insert]          : /^insert:(\w+):(.+)\n$/s,
+  [commandTypes.delete]          : /^delete:(\w+)\n$/s,
+  [commandTypes.get]             : /^get:(\w+):(\w+)\n$/s,
+  [commandTypes.format]          : /^format:(\w+):(\d):(\d):(\w+)\n$/s
 }
 
 function parseCommand(command) {
