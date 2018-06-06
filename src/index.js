@@ -17,7 +17,7 @@ const commandsTemplates = {
   [commandTypes.insertAtPosition]: /^insert:(\w+):(\d+):(\w+)/,  // TODO: merge with 'insert'
   [commandTypes.insert]          : /^insert:(\w+):(\w+)/,
   [commandTypes.delete]          : /^delete:(\w+)/,
-  [commandTypes.get]             : /^get:(\w+)/,
+  [commandTypes.get]             : /^get:(\w+):(\w+)/,
   [commandTypes.format]          : /^format:(\w+):(\d):(\d):(\w+)/
 }
 
