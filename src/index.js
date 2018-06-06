@@ -34,27 +34,33 @@ function parseCommand(command) {
   return args
 }
 
+
 const server = net.createServer((socket) => {
   socket.on('error', (err) => console.log(err))
   socket.on('data', (data) => {
+    let response = 404
     let args = parseCommand(data.toString('utf-8'))
-    
-    switch(args[0]) {
-      case commandTypes.create:
-        break
-      case commandTypes.insertAtPosition:
-        break
-      case commandTypes.insert:
-        break
-      case commandTypes.delete:
-        break
-      case commandTypes.get:
-        break
-      case commandTypes.format:
-        break
+
+    if (args) {
+      switch(args[0]) {
+        case commandTypes.create:
+          response = 200
+          break
+        case commandTypes.insertAtPosition:
+        case commandTypes.insert:
+        case commandTypes.format:
+          response = 200
+          break
+        case commandTypes.delete:
+          response = 200
+          break
+        case commandTypes.get:
+          response = 200
+          break
+      }      
     }
 
-    socket.write('200\r\n')
+    socket.write(`${response}\r\n`)
   })
 })
 
