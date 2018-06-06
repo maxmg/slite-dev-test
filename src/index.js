@@ -12,6 +12,8 @@ const commandTypes = {
   format          : 'format'
 }
 
+/** PARSING COMMANDS */
+
 const commandsTemplates = {
   [commandTypes.create]          : /^create:(\w+)\n$/s,
   [commandTypes.insertAtPosition]: /^insert:(\w+):(\d+):(.+)\n$/s,  // TODO: merge with 'insert'
@@ -33,6 +35,8 @@ function parseCommand(command) {
   })
   return args
 }
+
+/** STORAGE */
 
 var notesStorage = (() => {
   this.notes = {}
@@ -56,6 +60,8 @@ var notesStorage = (() => {
   }
   return this
 })()
+
+/** RENDERING NOTES */
 
 const stylingTags = {
   italic: { md: '*', txt: '' },
@@ -125,6 +131,8 @@ var notesBuilder = (() => {
   }
   return this
 })()
+
+/** SERVER */
 
 const server = net.createServer((socket) => {
   socket.on('error', (err) => console.log(err))
